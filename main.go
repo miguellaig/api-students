@@ -52,12 +52,7 @@ func getStudents(c echo.Context) error {
 	return c.String(http.StatusOK, "List of all students")
 }
 func createStudent(c echo.Context) error {
-	err := db.AddStudent(DB) // ✅ Captura o erro
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"error": err.Error(), // ✅ Retorna a mensagem do erro real
-		})
-	}
+	db.AddStudent()
 	return c.String(http.StatusOK, "Create Student")
 }
 
