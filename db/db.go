@@ -19,7 +19,10 @@ type Student struct {
 	Active bool
 }
 
-func Init() *gorm.DB {
+var db *gorm.DB
+
+func Init() {
+	var err error
 	db, err := gorm.Open(sqlite.Open("student.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatalln(err)
@@ -27,10 +30,9 @@ func Init() *gorm.DB {
 
 	db.AutoMigrate(&Student{})
 
-	return db
 }
 
-func AddStudent(db *gorm.DB) {
+func AddStudent() {
 
 	student := Student{
 		Name:   "Bento",
@@ -40,7 +42,7 @@ func AddStudent(db *gorm.DB) {
 		Active: true,
 	}
 	if result := db.Create(&student); result.Error != nil {
-		fmt.Println("Error to create student", result.Error)
+		fmt.Println("Error to create student")
 		return
 	}
 	fmt.Println("Create student!")

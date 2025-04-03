@@ -3,12 +3,28 @@ package main
 import (
 	"errors"
 	"fmt"
+	"log"
 	"log/slog"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/miguellaig/api-students/db"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
+
+var DB *gorm.DB
+
+func Init() {
+	var err error
+	DB, err = gorm.Open(sqlite.Open("student.db"), &gorm.Config{})
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	DB.AutoMigrate(&db.Student{}) // Se `Student` estiver em `db.go`
+}
 
 func main() {
 	// Echo instance
@@ -36,9 +52,15 @@ func getStudents(c echo.Context) error {
 	return c.String(http.StatusOK, "List of all students")
 }
 func createStudent(c echo.Context) error {
-	AddStudent(DB)
+	err := db.AddStudent(DB) // ✅ Captura o erro
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(), // ✅ Retorna a mensagem do erro real
+		})
+	}
 	return c.String(http.StatusOK, "Create Student")
 }
+
 func getStudent(c echo.Context) error {
 	id := c.Param("id")
 	getStud := fmt.Sprintf("Get %s student", id)
