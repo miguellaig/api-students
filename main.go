@@ -8,7 +8,6 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/miguellaig/api-students/db"
 )
 
 func main() {
@@ -37,7 +36,7 @@ func getStudents(c echo.Context) error {
 	return c.String(http.StatusOK, "List of all students")
 }
 func createStudent(c echo.Context) error {
-	db.AddStudent()
+	AddStudent(DB)
 	return c.String(http.StatusOK, "Create Student")
 }
 func getStudent(c echo.Context) error {
