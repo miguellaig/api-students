@@ -10,6 +10,8 @@ import (
 	"gorm.io/gorm"
 )
 
+var DB *gorm.DB
+
 type Student struct {
 	gorm.Model
 	Name   string
@@ -21,16 +23,16 @@ type Student struct {
 
 func Init() {
 	var err error
-	db, err := gorm.Open(sqlite.Open("student.db"), &gorm.Config{})
+	DB, err := gorm.Open(sqlite.Open("student.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	db.AutoMigrate(&Student{})
+	DB.AutoMigrate(&Student{})
 
 }
 
-func AddStudent(DB *gorm.DB) {
+func AddStudent() {
 
 	student := Student{
 		Name:   "Bento",

@@ -3,31 +3,18 @@ package main
 import (
 	"errors"
 	"fmt"
-	"log"
 	"log/slog"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/miguellaig/api-students/db"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
-
-var DB *gorm.DB
-
-func Init() {
-	var err error
-	DB, err = gorm.Open(sqlite.Open("student.db"), &gorm.Config{})
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	DB.AutoMigrate(&db.Student{}) // Se `Student` estiver em `db.go`
-}
 
 func main() {
 	// Echo instance
+	db.Init()
+
 	e := echo.New()
 
 	// Middleware
@@ -52,7 +39,7 @@ func getStudents(c echo.Context) error {
 	return c.String(http.StatusOK, "List of all students")
 }
 func createStudent(c echo.Context) error {
-	db.AddStudent(DB)
+	db.AddStudent()
 	return c.String(http.StatusOK, "Create Student")
 }
 
