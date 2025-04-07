@@ -19,8 +19,6 @@ type Student struct {
 	Active bool
 }
 
-var db *gorm.DB
-
 func Init() {
 	var err error
 	db, err := gorm.Open(sqlite.Open("student.db"), &gorm.Config{})
@@ -32,7 +30,7 @@ func Init() {
 
 }
 
-func AddStudent() {
+func AddStudent(DB *gorm.DB) {
 
 	student := Student{
 		Name:   "Bento",
@@ -41,7 +39,7 @@ func AddStudent() {
 		Age:    4,
 		Active: true,
 	}
-	if result := db.Create(&student); result.Error != nil {
+	if result := DB.Create(&student); result.Error != nil {
 		fmt.Println("Error to create student")
 		return
 	}

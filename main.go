@@ -52,7 +52,7 @@ func getStudents(c echo.Context) error {
 	return c.String(http.StatusOK, "List of all students")
 }
 func createStudent(c echo.Context) error {
-	db.AddStudent()
+	db.AddStudent(DB)
 	return c.String(http.StatusOK, "Create Student")
 }
 
